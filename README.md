@@ -18,11 +18,11 @@ This plugin adds the attribute `password_unset` to the User model. You can check
 
 Whenever you're registering a new user via a third-party auth method, you should set this attribute to `true`.
 
-```[php]
-    $new_user = Auth::register([
-        'email' => 'john@example.com',
-        'password_unset' => true
-    ]);
+```php
+$new_user = Auth::register([
+    'email' => 'john@example.com',
+    'password_unset' => true
+]);
 ```
 
 The `password_unset` property can also be triggered manually in the backend. Beware, when enabled on a existing user, **the old user password is erased.**
@@ -33,7 +33,7 @@ When a new password is set, the `password_unset` property is automatically turne
 
 When a user with a disabled password attempts to login using a login/password combo, the `auth.user_without_password_login_attempt` event is fired and an error message is displayed. You can customize the error message to guide the user on how they should log in.
 
-```[php]
+```php
 Event::listen('auth.user_without_password_login_attempt', function($user, &$message){
     if(/* User has linked its Google account */){
         $message = 'A matching user has been found, but the account has been created with Google. Please use your Google account to login.';
