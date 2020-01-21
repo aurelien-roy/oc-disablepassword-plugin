@@ -1,0 +1,27 @@
+{
+    "name": "tlokuus/oc-disablepassword-plugin",
+    "type": "october-plugin",
+    "description": "October CMS plugin for disabling user passwords",
+    "keywords": [
+        "october",
+        "cms",
+        "disable",
+        "password",
+        "auth"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aurelien Roy",
+            "email": "aurelien_roy@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.1",
+        "composer/installers": "~1.0",
+        "rainlab/user-plugin": "dev-master"
+    },
+    "extra": {
+        "installer-name": "disablepassword"
+    }
+}
