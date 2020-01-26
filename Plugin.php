@@ -7,7 +7,7 @@ use Lang;
 use Str;
 use October\Rain\Auth\AuthException;
 use System\Classes\PluginBase;
-use Rainlab\User\Models\User as UserModel;
+use RainLab\User\Models\User as UserModel;
 use RainLab\User\Components\Account as AccountComponent;
 
 class Plugin extends PluginBase
@@ -77,7 +77,8 @@ class Plugin extends PluginBase
          * React to User model changes
          */
         UserModel::extend(function($model){
-            $model->bindEvent('model.beforeSave', function() use ($model){
+            $model->fillable[] = 'password_unset';
+            $model->bindEvent('model.saveInternal', function() use ($model){
                 if(array_key_exists('password_unset', $model->getDirty()) && $model->password_unset){
                     // Simulate an unset password by generating a random one
                     $model->password = Str::random(40);
@@ -85,7 +86,7 @@ class Plugin extends PluginBase
                     // Once password is changed, remove the unset flag.
                     $model->password_unset = false;
                 }
-            });
+            }, 600); // Validation priority is 500. We must perform changes before validation.
         });
 
         /*
