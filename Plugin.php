@@ -77,11 +77,11 @@ class Plugin extends PluginBase
          * React to User model changes
          */
         UserModel::extend(function($model){
-            $model->fillable[] = 'password_unset';
+            $model->addFillable('password_unset');
             $model->bindEvent('model.saveInternal', function() use ($model){
                 if(array_key_exists('password_unset', $model->getDirty()) && $model->password_unset){
                     // Simulate an unset password by generating a random one
-                    $model->password = Str::random(40);
+                    $model->password_confirmation = $model->password = Str::random(40);
                 }elseif(array_key_exists('password', $model->getDirty())){
                     // Once password is changed, remove the unset flag.
                     $model->password_unset = false;
