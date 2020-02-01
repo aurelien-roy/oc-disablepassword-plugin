@@ -100,7 +100,7 @@ class Plugin extends PluginBase
 
             foreach($page->components as $comp){
                 if($comp instanceof AccountComponent){
-                    $requirePassword = $comp->property('requirePassword') && !$user->password_unset;
+                    $requirePassword = $comp->property('requirePassword', false) && !$user->password_unset;
                     $comp->setProperty('requirePassword',  $requirePassword);
                 }
             }
