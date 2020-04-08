@@ -38,7 +38,7 @@ class Plugin extends PluginBase
 
             $user = Auth::findUserByLogin($credentials['login']);
 
-            if($user && $user->password_unset){
+            if($user && $user->tlokuus_disablepassword_is_disabled){
                 $message = Lang::get('tlokuus.disablepassword::lang.password_disabled');
                 
                 Event::fire('auth.user_without_password_login_attempt', [$user, &$message]);
@@ -64,7 +64,7 @@ class Plugin extends PluginBase
             }
 
             $widget->addTabFields([
-                'password_unset' => [
+                'tlokuus_disablepassword_is_disabled' => [
                     'label'   => 'Mark password as unset',
                     'tab' => 'rainlab.user::lang.user.account',
                     'comment' => 'If option enabled, will disable ability for user to login with a password until a new password is set.',
@@ -77,14 +77,14 @@ class Plugin extends PluginBase
          * React to User model changes
          */
         UserModel::extend(function($model){
-            $model->addFillable('password_unset');
+            $model->addFillable('tlokuus_disablepassword_is_disabled');
             $model->bindEvent('model.saveInternal', function() use ($model){
-                if(array_key_exists('password_unset', $model->getDirty()) && $model->password_unset){
+                if(array_key_exists('tlokuus_disablepassword_is_disabled', $model->getDirty()) && $model->tlokuus_disablepassword_is_disabled){
                     // Simulate an unset password by generating a random one
                     $model->password_confirmation = $model->password = Str::random(40);
                 }elseif(array_key_exists('password', $model->getDirty())){
                     // Once password is changed, remove the unset flag.
-                    $model->password_unset = false;
+                    $model->tlokuus_disablepassword_is_disabled = false;
                 }
             }, 600); // Validation priority is 500. We must perform changes before validation.
         });
@@ -100,7 +100,7 @@ class Plugin extends PluginBase
 
             foreach($page->components as $comp){
                 if($comp instanceof AccountComponent){
-                    $requirePassword = $comp->property('requirePassword', false) && !$user->password_unset;
+                    $requirePassword = $comp->property('requirePassword', false) && !$user->tlokuus_disablepassword_is_disabled;
                     $comp->setProperty('requirePassword',  $requirePassword);
                 }
             }
